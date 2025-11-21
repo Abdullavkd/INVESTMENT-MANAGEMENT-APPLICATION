@@ -27,12 +27,14 @@ const investmentOppSchema = mongoose.Schema({
         index: true
     },
     status:{
-        type:String
+        type:String,
+        enum:['Open','Fully-Funded','Closed'],
+        default: 'Open'
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now
     }
-},
-{
-    timestamps:true
-}
-);
+});
 
 export const investmentOppModel = Schema.model("investmentOpp",investmentOppSchema)
