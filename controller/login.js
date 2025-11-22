@@ -41,4 +41,4 @@ export const loginAll = async (req,res) => {
     } catch (error) {
         res.status(error.status || 500).json(error.message || "Error")
     }
-}
+};
