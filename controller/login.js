@@ -32,7 +32,7 @@ export const loginAll = async (req,res) => {
         }
         
         // send response
-        res.status(201).json(`Logined Successfully`, {name:user.name,email:user.email,role:user.role,token:`Bearer ${token}`});
+        res.status(201).json({name:user.name,email:user.email,role:user.role,token:`Bearer ${token}`});
 
     } catch (error) {
         res.status(error.status || 500).json(error.message || "Error")
