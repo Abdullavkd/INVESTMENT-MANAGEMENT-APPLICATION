@@ -20,6 +20,10 @@ export const userRegister = async (req,res) => {
         // bcrypt password
         const bcryptedPass = await bcrypt.hash(password,10);
 
+        // create variable for role and createdAt
+        let role;
+        let createdAt;
+
         // save user to database
         const newUser = new userModel({
             name,
@@ -27,7 +31,7 @@ export const userRegister = async (req,res) => {
             password:bcryptedPass,
             role:"user",
             phone,
-            createdAt
+            createdAt:new Date()
         })
         await newUser.save();
 

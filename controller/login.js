@@ -7,6 +7,10 @@ export const loginAll = async (req,res) => {
         // take data from body
         const {email, password} = req.body;
 
+        if(!email || !password) {
+            return res.status(404).json("email and password are required")
+        }
+
         // check is there an account with the provided data
         const user = await userModel.findOne({email:email});
 
