@@ -1,5 +1,20 @@
 import mongoose, { model } from 'mongoose';
 
+const restePasswordSchema = new mongoose.Schema({
+    otpHash: {
+        type:String
+    },
+    expiresAt: {
+        type:Number
+    },
+    attempts: {
+        type:Number,
+        default:0
+    }
+},{
+    _id:false
+})
+
 const userSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -24,7 +39,8 @@ const userSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
-    }
+    },
+    restePassword:restePasswordSchema
 })
 
 export const userModel = mongoose.model("user",userSchema);

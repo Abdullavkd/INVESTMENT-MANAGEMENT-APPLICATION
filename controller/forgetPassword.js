@@ -1,5 +1,6 @@
 import { userModel } from "../model/user.js";
 import { sendMail } from "./sendMail.js";
+import crypto from 'crypto';
 
 export const forgetPassword = async (req,res) => {
     try{
@@ -26,6 +27,20 @@ export const forgetPassword = async (req,res) => {
             subject:"Reset Password",
             otp:otp
         });
+
+        // otp expiration
+        const OTP_TTL_MINUTES = 10;
+        const expiresAt = Date.now() + OTP_TTL_MINUTES * 60 * 1000;
+
+        // hash otp
+        const otpHash = crypto.createHash("sha256").update(String(otp)).digest("hex");
+
+        // save to mongoDB
+        user.restePassword = new userModel({
+            otpHash,
+            expiresAt
+        })
+        await user.save();
 
         // send response
         res.status(201).json("Otp Send to Your Email");
