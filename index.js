@@ -2,6 +2,7 @@ import express from 'express';
 import authRouter from './router/auth.js';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import superAdminRouter from './router/superAdmin.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -10,6 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth',authRouter);
+app.use('/api/admin',superAdminRouter)
+
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/investmentProject';
 async function start(){
