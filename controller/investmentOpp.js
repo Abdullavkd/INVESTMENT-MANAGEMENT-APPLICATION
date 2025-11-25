@@ -26,15 +26,15 @@ export const investOpp = async(req, res) => {
         if(!req.body) {
             return res.status(404).json("There is no data on req.body")
         }
-        let {companyName, equityDetails, targetPrice, returnPercentage, minInvestment} = req.body;
+        let {companyName, equityDetails, targetPrice, returnPercentage, minInvestment, status} = req.body;
 
         if(!companyName || !equityDetails || !targetPrice || !returnPercentage) {
             return res.status(404).json("Company Name, Equity Details, Target Price and Return Percentage fields are Required.")
         }
 
-        if(!minInvestment) {
-            minInvestment = 0;
-        }
+        // if(!minInvestment) {
+        //     minInvestment = 0;
+        // }
 
         // save to database
         const newInvestOpp = new investmentOppModel({
@@ -43,7 +43,8 @@ export const investOpp = async(req, res) => {
             targetPrice,
             returnPercentage,
             minInvestment,
-            postedBy:userId
+            postedBy:userId,
+            status
         });
         await newInvestOpp.save()
 
@@ -104,11 +105,17 @@ export const investOpp = async(req, res) => {
             if(!keep.includes(key)){
                 delete body[key]
             }
+            // find and check status
+            if(key == 'status'){
+                if(body[key] != 'Open' && body[key] != 'Fully-Funded' && body[key] != 'Closed') {
+                    return res.status(404).json("Invalid Status")
+                }
+            }
         }
+
         // update on database
         const updated = await investmentOppModel.findByIdAndUpdate(id,{$set:body},{new:true});
 
-        console.log(body)
         // send response
         res.status(201).json({message:"Updated Successfully",updated:updated})
 
