@@ -1,37 +1,6 @@
 import mongoose from 'mongoose';
 import { userModel } from '../model/user.js';
 
-// // create new investment opportunity function
-// export const investOpp = async(req, res) => {
-//     try {
-//         // take data from req.user
-//         if(!req.user) {
-//             return res.status(404).json("There is no data on req.user")
-//         }
-//         const user = req.user;
-    
-//         if(user.role != "admin") {
-//             return res.status(404).json('You are not an admin, so you can not create an investment opportunity')
-//         }
-
-//         // take data from body
-//         if(!req.body) {
-//             return res.status(404).json("There is no data on req.body")
-//         }
-//         const {companyName, equityDetails, targetPrice, returnPercentage, minInvestment} = req.body;
-
-//         if(!companyName || !equityDetails || !targetPrice || !returnPercentage || !minInvestment)
-//     } catch (error) {
-        
-//     }
-// }
-
-
-
-
-
-
-
 
 
 

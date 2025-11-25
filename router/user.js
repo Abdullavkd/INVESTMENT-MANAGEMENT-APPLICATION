@@ -4,7 +4,7 @@ import { allUser, updateRole } from '../controller/user.js';
 
 const userRouter = express.Router();
 
-userRouter.put('/users/:id/role',verifyToken,updateRole)
-userRouter.get('/users',verifyToken,allUser)
+userRouter.put('/users/:id/role', verifyToken, updateRole)
+userRouter.get('/users', verifyToken, allUser)
 
 export default userRouter;

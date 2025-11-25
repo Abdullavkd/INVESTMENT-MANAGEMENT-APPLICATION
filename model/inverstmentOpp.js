@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const investmentOppSchema = mongoose.Schema({
     companyName:{
@@ -37,4 +37,4 @@ const investmentOppSchema = mongoose.Schema({
     }
 });
 
-export const investmentOppModel = Schema.model("investmentOpp",investmentOppSchema)
+export const investmentOppModel = mongoose.model("investmentOpp",investmentOppSchema)
