@@ -1,128 +1,38 @@
-import { userModel } from "../model/user.js";
-import bcrypt from 'bcrypt';
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import { userModel } from '../model/user.js';
 
-export const userRegister = async (req,res) => {
-    try {
-        // take data from body
-        const {name, email, password, phone} = req.body;
+// // create new investment opportunity function
+// export const investOpp = async(req, res) => {
+//     try {
+//         // take data from req.user
+//         if(!req.user) {
+//             return res.status(404).json("There is no data on req.user")
+//         }
+//         const user = req.user;
+    
+//         if(user.role != "admin") {
+//             return res.status(404).json('You are not an admin, so you can not create an investment opportunity')
+//         }
 
-        if(!name || !email || !password || !phone) {
-            return res.status(404).json("name, email, password and phone are Required");
-        }
+//         // take data from body
+//         if(!req.body) {
+//             return res.status(404).json("There is no data on req.body")
+//         }
+//         const {companyName, equityDetails, targetPrice, returnPercentage, minInvestment} = req.body;
+
+//         if(!companyName || !equityDetails || !targetPrice || !returnPercentage || !minInvestment)
+//     } catch (error) {
         
-
-        // is user exist
-        const isExist = await userModel.findOne({email:email});
-
-        if(isExist) {
-            return res.status(404).json("User already exist with the email id")
-        }
-
-        // bcrypt password
-        const bcryptedPass = await bcrypt.hash(password,10);
-
-        // create variable for role and createdAt
-        let role;
-        let createdAt;
-
-        // save user to database
-        const newUser = new userModel({
-            name,
-            email,
-            password:bcryptedPass,
-            role:"investor",
-            phone,
-            createdAt:new Date()
-        })
-        await newUser.save();
-
-        // send response
-        res.status(201).json({message:'Account Created Successfully',
-            user:{
-                name,
-                email,
-                password,
-                role,
-                phone,
-                createdAt
-            }
-        });
+//     }
+// }
 
 
-    } catch (error) {
-        res.status(error.status || 500).json(error.message || "Something Went Wrong on Creating Account")
-    }
-};
 
-export const adminRegister = async (req,res) => {
-    try {
-        // take user details from req.user
-        const user = req.user;
 
-        if(!user) {
-            return res.status(404).json("There is no user")
-        }
 
-        if(user.role != 'superAdmin') {
-            return res.status(404).json("You are not a Super Admin, so You can't create admin account");
-        }
 
-        // take data from body
-        let {name, email, password ,phone, role} = req.body;
 
-        if(!name || !email || !phone) {
-            return res.status("name, email and phone number are required")
-        }
 
-        // check user existense
-        const isExist = await userModel.findOne({email:email});
-        
-        if(isExist) {
-            return res.status(404).json("User Exists");
-        }
-
-        // is there no password, create random password
-        if(!password) {
-            password = String(Math.floor(10000000 + Math.random() * 90000000))
-        }
-
-        // isn't there a role, set as admin. is there a role except admin or user make an error
-        if(!role) {
-            role = 'admin';
-        }else if(role != 'admin' && role != 'investor') {
-            return res.status(404).json("You can only create account for admins and users")
-        }
-
-        // bcrypt password
-        const hashPass = await bcrypt.hash(password,10);
-
-        // save to database
-        const newUser = new userModel({
-            name,
-            email,
-            password:hashPass,
-            role,
-            phone,
-            createdAt: Date.now()
-        });
-        await newUser.save();
-
-        // send response
-        res.status(201).json({message:'Admin Acoount Created Successfully',
-            user:{
-                name,
-                email,
-                password,
-                role,
-                phone,
-                createdAt: Date.now()
-            }}
-        );
-    } catch (error) {
-        res.status(error.status || 500).json(error.message || 'Something error on creating admin account')
-    }
-}
 
 
 

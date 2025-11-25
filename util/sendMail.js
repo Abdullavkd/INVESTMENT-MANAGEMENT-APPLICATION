@@ -14,6 +14,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+
 // verify SMTP Connection
 transporter.verify()
 .then(() => console.log("SMTP Ready"))
