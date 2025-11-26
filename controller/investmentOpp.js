@@ -87,7 +87,7 @@ export const investOpp = async(req, res) => {
         if(!id) {
             return res.status(404).json("There is no id provided")
         }
-        if(!mongoose.Types.ObjectId){
+        if(!mongoose.Types.ObjectId.isValid(id)){
             return res.status(404).json("Invalid Id")
         }
 
@@ -155,7 +155,7 @@ export const investOpp = async(req, res) => {
         }
 
         // check valid id
-        if(!mongoose.Types.ObjectId) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).json("It is not Valid id")
         }
 
@@ -275,7 +275,7 @@ export const investOpp = async(req, res) => {
         }
 
         // check monogoose id
-        if(!mongoose.Types.ObjectId) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).json("Invalid Id")
         }
 

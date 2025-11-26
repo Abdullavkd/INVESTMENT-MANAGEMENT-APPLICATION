@@ -15,7 +15,7 @@ app.use(express.json());
 app.use('/api/auth',authRouter);
 app.use('/api/admin',userRouter);
 app.use('/api/opportunities',investmentOppRouter);
-app.use('/api/investmets', investmentRouter);
+app.use('/api/investments', investmentRouter);
 
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/investmentProject';
