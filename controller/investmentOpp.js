@@ -125,3 +125,53 @@ export const investOpp = async(req, res) => {
  }
 
 
+
+
+
+
+
+ /**
+  * // Function to delete an investment opportunity
+  * @param {*} req
+  * @param {*} res
+  */
+ export const deleteInvestOpp = async (req, res) => {
+    try {
+        // check admin
+        const user = req.user;
+        if(!user) {
+            return res.status(404).json("No user details provided")
+        }
+
+        // check role admin
+        if(user.role != 'admin') {
+            return res.status(404).json("You are not an Admin")
+        }
+
+        // take id from URL
+        const id = req.params.id;
+        if(!id) {
+            return res.status(404).json("There in no id Provided")
+        }
+
+        // check valid id
+        if(!mongoose.Types.ObjectId) {
+            return res.status(404).json("It is not Valid id")
+        }
+
+        // find opportunity from database
+        const investOpp = await investmentOppModel.findOne({_id:id})
+        console.log(investOpp)
+        if(!investOpp) {
+            return res.status(404).json("There is Opportunity with Provided Id")
+        }
+
+        // delete item
+        await investmentOppModel.deleteOne({_id:id});
+
+        // send successrull response
+        res.status(204).json();
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || "Something went wrong deleting Opportunity");
+    }
+ };
