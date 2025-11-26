@@ -241,3 +241,54 @@ export const investOpp = async(req, res) => {
         res.status(error.status || 500).json(error.message || 'Something Went Wrong')
     }
  }
+
+
+
+
+
+
+
+
+
+ /**
+  * Function to get details of an opportunity
+  * @param {*} req
+  * @param {*} res
+  */
+ export const getOpportunityDetails = async (req, res) => {
+    try {
+        // take user data from req.user
+        const user = req.user;
+        if(!user) {
+            return res.status(404).json("There is no user")
+        }
+
+        // check admin or investor
+        if(user.role != 'admin' && user.role != 'investor') {
+            return res.status(404).json("You are not and admin or investor")
+        }
+
+        // take id from url
+        const id = req.params.id;
+        if(!id) {
+            return res.status(404).json("There is no id provided");
+        }
+
+        // check monogoose id
+        if(!mongoose.Types.ObjectId) {
+            return res.status(404).json("Invalid Id")
+        }
+
+        // find opportunity from database
+        const investOpp = await investmentOppModel.findOne({_id:id});
+
+        if(!investOpp) {
+            return res.status(404).json("There is no opportunity with this id")
+        }
+
+        // send response
+        res.status(200).json(investOpp)
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || 'Something went wrong')
+    }
+ }
