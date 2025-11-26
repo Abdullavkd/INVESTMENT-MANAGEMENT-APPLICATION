@@ -73,3 +73,74 @@ export const addInvestment = async (req, res) => {
         res.status(error.status || 500).json(error.message || "Something went wrong")
     }
 }
+
+
+
+
+
+
+
+
+
+
+/**
+ * Function to list investment items
+ * @param {*} req
+ * @param {*} res
+ */
+export const listInvetsments = async (req, res) => {
+    try {
+        // check user role
+        const user = req.user;
+        if(!user) {
+            return res.status(404).json("There is no user provided")
+        }
+        if(user.role != 'amdin' && user.role != 'superAdmin') {
+            return res.status(404).json("You Are not an admin or superAdmin")
+        }
+
+        // take data from query
+        const investorId = req.query.investorId;
+        const opportunityId = req.query.opportunityId;
+
+        let investments;
+        if(investorId && opportunityId) {
+            // check id on mongoose
+        if(!mongoose.Types.ObjectId.isValid(investorId)) {
+            return res.status(404).json("Invalid InvestorId")
+        }
+        if(!mongoose.Types.ObjectId.isValid(opportunityId)) {
+            return res.status(404).json("Invalid OpportunityId")
+        }
+
+        // find investments from database
+        investments = await investmentModel.find({investorId:investorId, opportunityId:opportunityId});
+
+        }else if(investorId) {
+            if(!mongoose.Types.ObjectId.isValid(investorId)) {
+                return res.status(404).json("Invalid InvestorId")
+            }
+            // find investments from database
+            investments = await investmentModel.find({investorId:investorId});
+
+        }else if(opportunityId) {
+            if(!mongoose.Types.ObjectId.isValid(opportunityId)) {
+                return res.status(404).json("Invalid opportunityId")
+            }
+            // find investments from database
+            investments = await investmentModel.find({opportunityId:opportunityId});
+        }else{
+          // find investments from database
+            investments = await investmentModel.find();  
+        }
+console.log(investments)
+        if(!investments) {
+            return res.status(404).json("There is no credencials")
+        }
+
+        res.status(200).json(investments)
+
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || "Something Went Wrong Getting List")
+    }
+}
