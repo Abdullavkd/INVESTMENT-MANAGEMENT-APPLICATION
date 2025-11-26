@@ -22,7 +22,7 @@ const meetingReqSchema = mongoose.Schema({
     status:{
         type:String,
         enum:['Pending','Scheduled','Rejected'],
-        
+        default:'Pending'
     },
     scheduledData:{
         type:Date

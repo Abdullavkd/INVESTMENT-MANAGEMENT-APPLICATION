@@ -144,3 +144,46 @@ console.log(investments)
         res.status(error.status || 500).json(error.message || "Something Went Wrong Getting List")
     }
 }
+
+
+
+
+
+
+
+
+
+/**
+ * Function to get investment list of logged in investor
+ * @param {*} req
+ * @param {*} res
+ */
+export const investListMy = async (req, res) => {
+    try {
+        // check investor
+        const user = req.user;
+        if(!user) {
+            return res.status(404).json("There is no user")
+        }
+
+        // check role
+        if(user.role != 'investor') {
+            return res.status(404).json("You are not an investor")
+        }
+
+        // take user id
+        const id = user._id;
+
+        // find investment from database using user id
+        const investments = await investmentModel.find({investorId:id});
+
+        if(investments.length == 0) {
+            return res.status(404).json("You have no investments")
+        }
+
+        // send response
+        res.status(200).json(investments);
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || "Somthing Went Wrong");
+    }
+};
