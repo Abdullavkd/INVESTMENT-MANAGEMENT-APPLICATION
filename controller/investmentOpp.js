@@ -221,8 +221,13 @@ export const investOpp = async(req, res) => {
         .find(filter)
         .sort({[sortBy]:1})
         .skip(skip)
-        .limit(limit)
-        .populate("postedBy")
+        .limit(limit);
+
+        // take only company name, target price, return percentage and minimum investment
+        const finalData = queryData.map((data) => {
+            return {CompanyName:data.companyName, TargetPrice: data.targetPrice, ReturnPercentage: data.returnPercentage, MinimumInvestment: data.minInvestment}
+        })
+        console.log(finalData)
 
         // send response
         res.status(200).json({
@@ -230,7 +235,7 @@ export const investOpp = async(req, res) => {
             limit,
             total,
             totalPages:Math.ceil(total/limit),
-            queryData
+            finalData
         })
     } catch (error) {
         res.status(error.status || 500).json(error.message || 'Something Went Wrong')
