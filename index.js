@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import userRouter from './router/user.js';
 import investmentOppRouter from './router/investmentOpp.js';
+import investmentRouter from './router/investment.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -12,8 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth',authRouter);
-app.use('/api/admin',userRouter)
-app.use('/api/opportunities',investmentOppRouter)
+app.use('/api/admin',userRouter);
+app.use('/api/opportunities',investmentOppRouter);
+app.use('/api/investmets', investmentRouter);
 
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/investmentProject';
