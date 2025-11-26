@@ -175,3 +175,64 @@ export const investOpp = async(req, res) => {
         res.status(error.status || 500).json(error.message || "Something went wrong deleting Opportunity");
     }
  };
+
+
+
+
+
+
+
+
+
+ /**
+  * // Function to get list of opportunities by quries like oper, full-filled or closed
+  * @param {*} req
+  * @param {*} res
+  */
+ export const listInvestOpp = async (req, res) => {
+    try {
+        // check admin, investor
+        const user = req.user;
+        if(!user) {
+            return res.status(404).json("There is no user Availbale")
+        }
+
+        // check role admin, investor
+        if(user.role != 'admin' && user.role != 'investor') {
+            return res.status(404).json("You are not an admin or investor")
+        }
+
+        // take data from query
+        const limit = parseInt(req.query.limit || 3);
+        const page = parseInt(req.query.page || 1);
+        const sortBy = req.query.sortBy || "createdAt";
+
+        // create skip to choose page
+        const skip = (page -1) * limit;
+
+        // filter open
+        const filter = {status:"Open"}
+
+        // count of documents after filtering
+        const total = await investmentOppModel.find(filter).countDocuments();
+
+        // take data from database using queries
+        const queryData = await investmentOppModel
+        .find(filter)
+        .sort({[sortBy]:1})
+        .skip(skip)
+        .limit(limit)
+        .populate("postedBy")
+
+        // send response
+        res.status(200).json({
+            page,
+            limit,
+            total,
+            totalPages:Math.ceil(total/limit),
+            queryData
+        })
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || 'Something Went Wrong')
+    }
+ }
