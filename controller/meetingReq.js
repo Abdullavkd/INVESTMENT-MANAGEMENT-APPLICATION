@@ -116,3 +116,73 @@ export const listMeetingReq = async (req, res) => {
         res.status(error.status || 500).json(error.message || "Something Went Wrong")
     }
 }
+
+
+
+
+
+
+
+
+
+export const updateStatusMeeting = async (req, res) => {
+    try {
+        // check user
+        if(!req.user) {
+            return res.status(404).json("There is no User");
+        }
+        const user = req.user;
+        if(user.role != 'admin') {
+            return res.status(404).json("You are not an Admin")
+        }
+
+        // take data from body
+        if(!req.body) {
+            return res.status(404).json("There is no data on body")
+        }
+        const {status, scheduledDate} = req.body;
+
+        if(!status) {
+            return res.status(404).json("Status is Required")
+        }
+
+        if(status == 'Scheduled' && !scheduledDate) {
+            return res.status(404).json("Scheduled Time is Required for Status Scheduled")
+        }else if(status == 'Pending' || status == 'Rejected') {
+            if(scheduledDate) {
+                return res.status(404).json(`You can't add date for ${status} status`)
+            }
+        }
+
+        if(status != 'Pending' && status != 'Scheduled' && status != 'Rejected') {
+            return res.status(404).json("This Status in not Allowed")
+        }
+
+        // take data from params
+        const id = req.params.id;
+        if(!id) {
+            return res.status(404).json("No id Provided")
+        }
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json("Invalid Id")
+        }
+
+        // find user from database
+        const request = await meetingReqModel.findById(id);
+        if(!request) {
+            return res.status(404).json("No Meeting Request Found")
+        }
+
+        if(request.status == status) {
+            return res.status(404).json(`Meeting is already with ${status} status`)
+        }
+
+        // update data
+        const updatedReq = await meetingReqModel.findByIdAndUpdate(id,{$set:{status:status, scheduledDate:scheduledDate || null}},{new:true});
+
+        // send response
+        res.status(201).json({message: "Meeting Request Status and Date Updated Successfully",updated:{updatedReq}});
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || "Something Went Wrong")
+    }
+}

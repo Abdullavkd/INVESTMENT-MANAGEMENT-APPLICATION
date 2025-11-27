@@ -24,7 +24,7 @@ const meetingReqSchema = mongoose.Schema({
         enum:['Pending','Scheduled','Rejected'],
         default:'Pending'
     },
-    scheduledData:{
+    scheduledDate:{
         type:Date
     },
     createAt:{
