@@ -68,3 +68,51 @@ export const newMeetingReq = async (req, res) => {
         res.status(error.status || 500).json(error.message || "Something Went Wrong Rquesting a Meeting")
     }
 }
+
+
+
+
+
+
+
+/**
+ * Function to get pending/scheduled meetings
+ * @param {*} req
+ * @param {*} res
+ */
+export const listMeetingReq = async (req, res) => {
+    try {
+        // check user
+        if(!req.user) {
+            return res.status(404).json("There is no user on req.user")
+        }
+        const user = req.user;
+
+        // check user role
+        if(user.role != 'admin') {
+            return res.status(404).json("You are not an admin");
+        }
+
+        // take data from query
+        let listReq;
+        const status = req.query.status;
+
+        if(!status) {
+            listReq = await meetingReqModel.find();
+        }else if(status == 'Scheduled' || status == 'Pending' || status == 'Rejected') {
+            listReq = await meetingReqModel.find({status:status})
+        }else{
+            return res.status(404).json("This Status is not allowed")
+        }
+        
+        if(listReq.length == 0) {
+            return res.status(404).json("There are no requests")
+        }
+
+        // send response
+        res.status(200).json({message: "Meeting Requests List",listReq});
+
+    } catch (error) {
+        res.status(error.status || 500).json(error.message || "Something Went Wrong")
+    }
+}
