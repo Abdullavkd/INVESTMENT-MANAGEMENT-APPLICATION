@@ -1,11 +1,12 @@
 import express from 'express';
-import authRouter from './router/auth.js';
-import mongoose from 'mongoose';
 import cors from 'cors';
+import mongoose from 'mongoose';
+import authRouter from './router/auth.js';
 import userRouter from './router/user.js';
 import investmentOppRouter from './router/investmentOpp.js';
 import investmentRouter from './router/investment.js';
 import meetingReqRouter from './router/meetingReq.js';
+import dashboardRouter from './router/dashboard.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -18,6 +19,7 @@ app.use('/api/admin',userRouter);
 app.use('/api/opportunities',investmentOppRouter);
 app.use('/api/investments', investmentRouter);
 app.use('/api/requests', meetingReqRouter)
+app.use('/api/dashboard', dashboardRouter)
 
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/investmentProject';
